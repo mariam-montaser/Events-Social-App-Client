@@ -4,11 +4,12 @@ import { Activity } from '../../../app/models/activity'
 
 interface Props{
   activity: Activity| undefined;
+  submitting: boolean;
   createOrEdit: (activity: Activity) => void;
   closeForm: () => void;
 }
 
-export const ActivityForm = ({activity: selectedActivity, closeForm, createOrEdit}:Props) => {
+export const ActivityForm = ({activity: selectedActivity, submitting, closeForm, createOrEdit}:Props) => {
 
   const initialState = selectedActivity ?? {
     id: '',

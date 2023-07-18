@@ -7,16 +7,24 @@ import { Navbar } from './Navbar';
 import { ActivityDashboard } from '../../features/activities/dashboard/ActivityDashboard';
 import { Activity } from '../models/activity';
 import axios from 'axios';
+import agent from '../api/agent';
+import { Loading } from './Loading';
 
 function App() {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [selectedActivity, setSelectedActivity]= useState<Activity | undefined>(undefined);
   const [editMode, setEditMode]= useState(false);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   useEffect(() => {
-    axios.get('http://localhost:5000/api/activities').then(({data}) => {
-      console.log(data);
-      
-      setActivities(data);
+    agent.Activities.list().then(response => {
+      let activities: Activity[] = [];
+      response.forEach(activity => {
+        activity.date = activity.date.split('T')[0];
+        activities.push(activity)
+      });
+      setActivities(activities);
+      setLoading(false);
     })
   }, [])
 
@@ -38,17 +46,31 @@ function App() {
   }
 
   const handleDeleteActivity = (id: string) => {
-    setActivities([...activities.filter(activity => activity.id !== id)]);
+    setSubmitting(true);
+    agent.Activities.delete(id).then(() => {
+      setActivities([...activities.filter(activity => activity.id !== id)]);
+      setSubmitting(false);
+    })
   }
 
   const handleCreateOrEditActivity = (activity: Activity) => {
-    activity.id
-    ? setActivities([...activities.filter(activ => activ.id !== activity.id), activity])
-    : setActivities([...activities, {...activity, id: uuid()}])
+    setSubmitting(true);
+    if(activity.id){
+      agent.Activities.update(activity).then(() => {
+        setActivities([...activities.filter(activ => activ.id !== activity.id), activity])
+      })
+    } else {
+      activity.id = uuid();
+      agent.Activities.create(activity).then(() => {
+        setActivities([...activities, {...activity, id: uuid()}]);
+      })
+    }
     setEditMode(false);
     setSelectedActivity(activity);
+    setSubmitting(false);
   }
 
+  if(loading ) return <Loading content='Loading App...'  />
 
   return (
     <>
@@ -58,6 +80,7 @@ function App() {
           activities={activities}
           selectedActivity={selectedActivity}
           editMode={editMode}
+          submitting={submitting}
           selectActivity={handleSelectActivity}
           cancelSelectActivity={handleCancelSelect}
           openForm={handleFormOpen}
