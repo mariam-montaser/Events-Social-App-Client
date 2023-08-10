@@ -18,7 +18,7 @@ import MyDateInput from '../../../app/common/form/MyDateInput';
 const ActivityForm = () => {
 
   const { activityStore } = useStore();
-  const { loadActivity, createActivity, updateActivity, loading, loadingInitial } = activityStore;
+  const { loadActivity, createActivity, updateActivity, loadingInitial } = activityStore;
   const { id } = useParams();
   const navigate = useNavigate()
   const [activity, setActivity] = useState<ActivityFormValues>(new ActivityFormValues());

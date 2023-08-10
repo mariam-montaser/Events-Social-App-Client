@@ -22,7 +22,7 @@ const RegisterForm = () => {
           <MyTextInput name='displayName' placeholder='Display Name' />
           <MyTextInput name='username' placeholder='Username' />
           <MyTextInput name='email' placeholder='Email' />
-          <MyTextInput name='password' placeholder='Password' type='password' />
+          <MyTextInput name='password' placeholder='Password' type='text' />
           <ErrorMessage name='error' render={() => <ValidationError errors={errors.error} />} />
           <Button disabled={!isValid || !dirty || isSubmitting} loading={isSubmitting} positive content='Register' type='submit' fluid />
         </Form>
