@@ -14,14 +14,14 @@ import ActivityDetailsSidebar from './ActivityDetailsSidebar';
 const ActivityDetails = () => {
 
   const {activityStore} = useStore();
-  const {selectedActivity: activity, loadActivity, loadingInitial} = activityStore;
+  const {selectedActivity: activity, loadActivity, cleatActivity, loadingInitial} = activityStore;
   const {id} = useParams<{id: string}>();
 
 
   useEffect(() => {
     if (id) loadActivity(id);
-    
-  }, [id, loadActivity])
+    return () => cleatActivity();
+  }, [id, loadActivity, cleatActivity])
 
   if (loadingInitial || !activity) return <Loading content='Loading Activity...'/>;
 
@@ -30,7 +30,7 @@ const ActivityDetails = () => {
       <Grid.Column width='10'>
         <ActivityDetailsHeader activity={activity} />
         <ActivityDetailsInfo activity={activity} />
-        <ActivityDetailsChat />
+        <ActivityDetailsChat activityId={activity.id} />
       </Grid.Column>
       <Grid.Column width='6'>
         <ActivityDetailsSidebar activity={activity} />

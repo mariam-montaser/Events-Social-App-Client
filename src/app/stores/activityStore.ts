@@ -176,6 +176,10 @@ export default class ActivityStore{
         }
     }
 
+    cleatActivity = () => {
+        this.selectedActivity = undefined;
+    }
+
     deleteActivity = async (id: string) => {
         this.loading = true;
         try {

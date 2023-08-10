@@ -25,7 +25,7 @@ const ActivityDetailsSidebar = ({activity:{attendees, host}}: Props) => {
         <Segment attached>
             <List relaxed divided>
             {attendees.map(attendee => (
-                        <Item style={{ position: 'relative' }}>
+                        <Item key={attendee.username} style={{ position: 'relative' }}>
                             {attendee.username === host?.username &&
                             <Label
                                 style={{ position: 'absolute' }}
